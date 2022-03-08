@@ -18,12 +18,27 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+		"unused-imports"
     ],
     "rules": {
 		"indent": [
 			"error",
 			"tab"
+		],
+		"import/order": [
+			"error",
+			{
+				"groups": ["builtin", "external", "internal", ["parent", "sibling"], "object", "type", "index"],
+				"newlines-between": "always",
+				"pathGroupsExcludedImportTypes": ["builtin"],
+				"alphabetize": { "order": "asc", "caseInsensitive": true },
+				"pathGroups": [
+					{ "pattern": "@/components/ui/**", "group": "internal", "position": "before" },
+
+					{ "pattern": "./**.module.css", "group": "index", "position": "before" }
+				]
+			}
 		]
     }
 }

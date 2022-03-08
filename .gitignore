@@ -1,0 +1,4 @@
+node_modules
+songsData
+src/server/apiKey.ts
+yarn-error.log

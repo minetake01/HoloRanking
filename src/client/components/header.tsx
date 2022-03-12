@@ -16,7 +16,7 @@ export const Header = () => {
 					<Typography
 						variant='h5'
 						component="div"
-						sx={{flexGrow: 1}}
+						sx={{flexGrow: 1, userSelect: 'none'}}
 					>
 						HoloRanking
 					</Typography>

@@ -8,10 +8,11 @@ module.exports = merge(webpackConfig, {
 		open: true,
 		host: 'localhost',
 		port: 8080,
+		hot: true,
 		proxy: {
-			'/api/**': {
+			'/HoloRanking/api/**': {
 				target: 'http://localhost:3000',
-				secure: false
+				secure: false,
 			}
 		},
 	}

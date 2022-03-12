@@ -41,7 +41,7 @@ export async function dataCollection() {
 	// データ読み込み
 	const previousDate = new Date();
 	previousDate.setDate(previousDate.getDate() - 1);
-	songsData = JSON.parse(await fs.promises.readFile(`./songsData/${previousDate.getFullYear()}${previousDate.getMonth()+1}${previousDate.getDate()}.json`, 'utf-8'));
+	songsData = JSON.parse(await fs.promises.readFile(`./songsData/${previousDate.getFullYear()}${('0'+(previousDate.getMonth()+1)).slice(-2)}${('0'+previousDate.getDate()).slice(-2)}.json`, 'utf-8'));
 	const Member = JSON.parse(await fs.promises.readFile(`./memberList.json`, 'utf-8'));
 	// Holodexから取得
 	const [music_cover, original] = await Promise.all([
@@ -112,5 +112,5 @@ export async function dataCollection() {
 		});
 	}
 	const date = new Date();
-	fs.writeFileSync(`./songsData/${date.getFullYear()}${date.getMonth()+1}${date.getDate()}.json`, JSON.stringify(songsData), null);
+	fs.writeFileSync(`./songsData/${date.getFullYear()}${('0'+(date.getMonth()+1)).slice(-2)}${('0'+date.getDate()).slice(-2)}.json`, JSON.stringify(songsData), null);
 }

@@ -1,7 +1,10 @@
 import * as fs from 'fs';
-import {HolodexApiClient, SortOrder, VideoStatus} from 'holodex.js';
-import {holodexApiKey, youtubeApiKey} from './apiKey';
+
 import {google} from 'googleapis';
+import {HolodexApiClient, VideoStatus} from 'holodex.js';
+
+import {holodexApiKey, youtubeApiKey} from './apiKey';
+import {holodexLogger, systemLogger, youtubeLogger} from './logger';
 
 const holodex = new HolodexApiClient({
 	apiKey: holodexApiKey,
@@ -38,10 +41,14 @@ let songsData: {
 };
 
 export async function dataCollection() {
+	systemLogger.info('Start data collect.');
 	// データ読み込み
 	const previousDate = new Date();
 	previousDate.setDate(previousDate.getDate() - 1);
-	songsData = JSON.parse(await fs.promises.readFile(`./songsData/${previousDate.getFullYear()}${('0'+(previousDate.getMonth()+1)).slice(-2)}${('0'+previousDate.getDate()).slice(-2)}.json`, 'utf-8'));
+	songsData = JSON.parse(await fs.promises.readFile(`./songsData/${previousDate.getFullYear()}${('0'+(previousDate.getMonth()+1)).slice(-2)}${('0'+previousDate.getDate()).slice(-2)}.json`, 'utf-8')
+		.catch((e) => {
+			throw systemLogger.error(e);
+		}));
 	const Member = JSON.parse(await fs.promises.readFile(`./memberList.json`, 'utf-8'));
 	// Holodexから取得
 	const [music_cover, original] = await Promise.all([
@@ -52,6 +59,8 @@ export async function dataCollection() {
 			sort: 'published_at',
 			limit: 50,
 			org: 'Hololive',
+		}).catch((response) => {
+			throw holodexLogger.error(response);
 		}),
 		holodex.getVideos({
 			topic: 'Original_Song',
@@ -60,6 +69,8 @@ export async function dataCollection() {
 			sort: 'published_at',
 			limit: 50,
 			org: 'Hololive',
+		}).catch((response) => {
+			throw holodexLogger.error(response);
 		}),
 	]);
 	// 新曲を追加
@@ -109,8 +120,41 @@ export async function dataCollection() {
 					songsData.Original[originalIndex].total = Number(item.statistics?.viewCount);
 				}
 			});
+		}).catch((response) => {
+			throw youtubeLogger.error(response);
 		});
 	}
 	const date = new Date();
 	fs.writeFileSync(`./songsData/${date.getFullYear()}${('0'+(date.getMonth()+1)).slice(-2)}${('0'+date.getDate()).slice(-2)}.json`, JSON.stringify(songsData), null);
+	systemLogger.info('Data Collected.');
+}
+
+export async function getComment(videoId: string) {
+	systemLogger.info('Start get comment.');
+	const commentData: {
+		[videoId: string]: {
+			comment: string,
+			author: string,
+			authorImage: string,
+			date: string,
+		}[]
+	} = {};
+
+	await youtube.commentThreads.list({
+		part: ['snippet'],
+		order: 'relevance',
+		videoId: videoId,
+	}).then((response) => {
+		commentData[response.data.items![0].snippet?.videoId!] = response.data.items!.map((item) => {
+			return {
+				comment: item.snippet?.topLevelComment?.snippet?.textOriginal!,
+				author: item.snippet?.topLevelComment?.snippet?.authorDisplayName!,
+				authorImage: item.snippet?.topLevelComment?.snippet?.authorProfileImageUrl!,
+				date: item.snippet?.topLevelComment?.snippet?.publishedAt!,
+			};
+		});
+	}).catch((response) => {
+		throw youtubeLogger.error(response);
+	});
+	return commentData;
 }

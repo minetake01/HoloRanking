@@ -19,6 +19,7 @@
     "plugins": [
         "react",
         "@typescript-eslint",
+		"import",
 		"unused-imports"
     ],
     "rules": {
@@ -27,7 +28,7 @@
 			"tab"
 		],
 		"import/order": [
-			"error",
+			"warn",
 			{
 				"groups": ["builtin", "external", "internal", ["parent", "sibling"], "object", "type", "index"],
 				"newlines-between": "always",
@@ -39,6 +40,8 @@
 					{ "pattern": "./**.module.css", "group": "index", "position": "before" }
 				]
 			}
-		]
+		],
+		"@typescript-eslint/no-unused-vars": "off",
+		"unused-imports/no-unused-imports": "warn"
     }
 }

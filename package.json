@@ -10,7 +10,7 @@
 		"dev": "SET NODE_ENV=development & concurrently -n client,server,lint \"yarn client\" \"yarn server\" \"yarn lint\"",
 		"start": "SET NODE_ENV=production & yarn build && yarn server && yarn lint",
 		"precommit": "lint-staged",
-		"lint": "esw --watch src --fix -c .eslintrc.json --ext js,jsx,ts,tsx"
+		"lint": "eslint src --fix -c .eslintrc.json --ext js,jsx,ts,tsx"
 	},
 	"pre-commit": [
 		"lint-staged"
@@ -30,6 +30,7 @@
 		"@babel/preset-react": "^7.16.7",
 		"@babel/preset-typescript": "^7.16.7",
 		"@types/express": "^4.17.13",
+		"@types/log4js": "^2.3.5",
 		"@types/node": "^17.0.21",
 		"@types/node-cron": "^3.0.1",
 		"@types/react": "^17.0.39",
@@ -43,14 +44,15 @@
 		"css-loader": "^6.7.0",
 		"eslint": "^8.10.0",
 		"eslint-config-google": "^0.14.0",
+		"eslint-plugin-import": "^2.25.4",
 		"eslint-plugin-react": "^7.29.3",
-		"eslint-watch": "^8.0.0",
 		"html-webpack-plugin": "^5.5.0",
 		"husky": "^7.0.4",
 		"lint-staged": "^12.3.4",
 		"node-sass": "^7.0.1",
 		"postcss-loader": "^6.2.1",
 		"prettier": "^2.5.1",
+		"redux-devtools": "^3.7.0",
 		"sass-loader": "^12.6.0",
 		"style-loader": "^3.3.1",
 		"ts-node": "^10.6.0",
@@ -68,15 +70,19 @@
 		"@mui/icons-material": "^5.4.2",
 		"@mui/material": "^5.4.2",
 		"@mui/x-data-grid": "^5.6.0",
+		"@reduxjs/toolkit": "^1.8.0",
 		"axios": "^0.26.0",
 		"csv-parse": "^5.0.4",
 		"eslint-plugin-unused-imports": "^2.0.0",
 		"express": "^4.17.3",
+		"express-rate-limit": "^6.3.0",
 		"googleapis": "^95.0.0",
 		"holodex.js": "^1.1.0",
+		"log4js": "^6.4.2",
 		"node-cron": "^3.0.0",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
+		"react-redux": "^7.2.6",
 		"ytdl-core": "^4.10.1"
 	}
 }

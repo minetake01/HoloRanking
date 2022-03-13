@@ -1,23 +1,36 @@
-import {FormControl, Grid, Link, MenuItem, Select, Toolbar, Tooltip, Typography} from '@mui/material';
-import {DataGrid, GridColDef, GridToolbar, jaJP} from '@mui/x-data-grid';
+import {Launch} from '@mui/icons-material';
+import {FormControl, Grid, IconButton, Link, MenuItem, Select, Toolbar, Tooltip} from '@mui/material';
+import {DataGrid, GridToolbar, jaJP} from '@mui/x-data-grid';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {dataProcess, rowsType} from '../dataProcessing';
+import {useDispatch} from 'react-redux';
+
+import {dataProcess} from '../dataProcessing';
+import {setControlKey} from '../store/Slice/controlKey';
+import {setPeriod} from '../store/Slice/period';
+import {setPlayer} from '../store/Slice/player';
+import {setRows} from '../store/Slice/rows';
+import {setVideoType} from '../store/Slice/videoType';
+import {useSelector} from '../store/store';
 
 export const Main = () => {
-	const [videoType, setVideoType] = React.useState<'Music_Cover' | 'Original'>('Music_Cover');
-	const [period, setPeriod] = React.useState('weekly');
-	const [rows, setRows] = React.useState<rowsType[]>([]);
-	const [controlKey, setControlKey] = React.useState(false)
+	const videoType = useSelector((state) => state.videoType.value);
+	const period = useSelector((state) => state.period.value);
+	const rows = useSelector((state) => state.rows.value);
+	const controlKey = useSelector((state) => state.controlKey.state);
+	const dispatch = useDispatch();
 
-	document.onkeydown = event => {if (event.ctrlKey) setControlKey(true)}
-	document.onkeyup = event => setControlKey(false)
+	document.onkeydown = (event) => {
+		if (event.ctrlKey) dispatch(setControlKey(true));
+	};
+	document.onkeyup = (_) => dispatch(setControlKey(false));
 
 	React.useEffect(() => {
-		(async () => {
-			setRows(await dataProcess(videoType, period));
-		})();
-	}, []);
+		dispatch(setRows([]));
+		dataProcess(videoType, period)
+			.then((value) => {
+				dispatch(setRows(value));
+			});
+	}, [videoType, period]);
 
 	return (
 		<Grid item xs={9} sx={{height: '100vh', paddingTop: '64px'}}>
@@ -28,7 +41,7 @@ export const Main = () => {
 						size='small'
 						value={videoType}
 						onChange={(event) => {
-							setVideoType(event.target.value as 'Music_Cover' | 'Original');
+							dispatch(setVideoType(event.target.value as 'Music_Cover' | 'Original'));
 						}}
 					>
 						<MenuItem value='Music_Cover'>歌みた</MenuItem>
@@ -41,7 +54,7 @@ export const Main = () => {
 						size='small'
 						value={period}
 						onChange={(event) => {
-							setPeriod(event.target.value);
+							dispatch(setPeriod(event.target.value));
 						}}
 					>
 						<MenuItem value='weekly'>週間</MenuItem>
@@ -78,15 +91,30 @@ export const Main = () => {
 						headerName: 'タイトル',
 						width: 400,
 						renderCell: (params) => {
-							console.log(params)
-							return <Tooltip title={params.formattedValue} disableInteractive>
-								<div>
-									{controlKey ? <Link href={params.row.url} underline='none' color='initial'>
-										<div style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>
-									</Link> : <div style={{cursor: 'default', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>}
+							return (
+								<div style={{maxWidth: 'calc(100% - 36px)', display: 'flex', alignItems: 'center'}}>
+									<Tooltip title={params.formattedValue} disableInteractive>
+										<div style={{maxWidth: '100%'}}>
+											{controlKey ?
+												<Link href={params.row.url} underline='none' color='initial' rel='noopener'>
+													<div style={{cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>
+												</Link> :
+												<div style={{cursor: 'default', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>}
+										</div>
+									</Tooltip>
+									<Tooltip title="埋め込みプレーヤーで再生" disableInteractive>
+										<IconButton
+											size='small'
+											onClick={() => {
+												dispatch(setPlayer(params.row.url));
+											}}
+										>
+											<Launch fontSize='small' />
+										</IconButton>
+									</Tooltip>
 								</div>
-							</Tooltip>
-						}
+							);
+						},
 					},
 					{
 						field: 'author',
@@ -95,8 +123,8 @@ export const Main = () => {
 						renderCell: (params) => {
 							return <Tooltip title={params.formattedValue} disableInteractive>
 								<div style={{cursor: 'default', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>
-							</Tooltip>
-						}
+							</Tooltip>;
+						},
 					},
 					{
 						field: 'en_author',
@@ -105,8 +133,8 @@ export const Main = () => {
 						renderCell: (params) => {
 							return <Tooltip title={params.formattedValue} disableInteractive>
 								<div style={{cursor: 'default', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>
-							</Tooltip>
-						}
+							</Tooltip>;
+						},
 					},
 					{
 						field: 'song',
@@ -115,8 +143,8 @@ export const Main = () => {
 						renderCell: (params) => {
 							return <Tooltip title={params.formattedValue} disableInteractive>
 								<div style={{cursor: 'default', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>
-							</Tooltip>
-						}
+							</Tooltip>;
+						},
 					},
 					{
 						field: 'artist',
@@ -125,8 +153,8 @@ export const Main = () => {
 						renderCell: (params) => {
 							return <Tooltip title={params.formattedValue} disableInteractive>
 								<div style={{cursor: 'default', overflow: 'hidden', textOverflow: 'ellipsis'}}>{params.formattedValue}</div>
-							</Tooltip>
-						}
+							</Tooltip>;
+						},
 					},
 					{
 						field: 'date',
@@ -152,7 +180,7 @@ export const Main = () => {
 						width: 300,
 						renderCell: (params) => {
 							return <Link href={params.value} target='_blank'>{params.value}</Link>;
-						}
+						},
 					},
 				]}
 				rows={rows}

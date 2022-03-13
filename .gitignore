@@ -1,5 +1,6 @@
 node_modules
 songsData
 dist
+logs
 src/server/apiKey.ts
 yarn-error.log

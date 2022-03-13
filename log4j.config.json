@@ -1,0 +1,57 @@
+{
+	"appenders": {
+		"console": {
+			"type": "console"
+		},
+		"system": {
+			"type": "dateFile",
+			"filename": "logs/system.log",
+			"pattern": "-yyyy-MM-dd"
+		},
+		"holodex": {
+			"type": "dateFile",
+			"filename": "logs/dataCollection/holodex.log",
+			"pattern": "-yyyy-MM-dd"
+		},
+		"youtube": {
+			"type": "dateFile",
+			"filename": "logs/dataCollection/youtube.log",
+			"pattern": "-yyyy-MM-dd"
+		},
+		"access_info": {
+			"type": "dateFile",
+			"filename": "logs/access/info.log",
+			"pattern": "-yyyy-MM-dd"
+		}
+	},
+	"categories": {
+		"default": {
+			"appenders": [
+				"console",
+				"system"
+			],
+			"level": "all"
+		},
+		"holodex": {
+			"appenders": [
+				"console",
+				"holodex"
+			],
+			"level": "all"
+		},
+		"youtube": {
+			"appenders": [
+				"console",
+				"youtube"
+			],
+			"level": "all"
+		},
+		"access_info": {
+			"appenders": [
+				"console",
+				"access_info"
+			],
+			"level": "all"
+		}
+	}
+}

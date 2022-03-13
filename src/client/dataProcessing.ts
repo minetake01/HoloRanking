@@ -80,7 +80,7 @@ export async function dataProcess(videoType: 'Music_Cover' | 'Original', period:
 	});
 
 	const rows = songsData[0][videoType].map((item) => {
-		const prevItem = prevRows.find((value) => value.videoId === item.videoId)
+		const prevItem = prevRows.find((value) => value.videoId === item.videoId);
 		return {
 			rank: prevItem ? NaN : 'NEW',
 			lastRank: prevItem ? prevItem!.rank : '-',
@@ -103,16 +103,16 @@ export async function dataProcess(videoType: 'Music_Cover' | 'Original', period:
 	rows.forEach((item) => {
 		if (item.rank !== 'NEW') item.rank = index++;
 		if (Number.isFinite(item.rank) && Number.isFinite(item.lastRank)) {
-			const fluctuation = (item.lastRank as number) - (item.rank as number)
+			const fluctuation = (item.lastRank as number) - (item.rank as number);
 			switch (Math.sign(fluctuation)) {
-				case -1:
-					item.fluctuation = `${fluctuation}`
-					break;
-				case 0:
-					item.fluctuation = `±${fluctuation}`
-					break;
-				case 1:
-					item.fluctuation = `+${fluctuation}`
+			case -1:
+				item.fluctuation = `${fluctuation}`;
+				break;
+			case 0:
+				item.fluctuation = `±${fluctuation}`;
+				break;
+			case 1:
+				item.fluctuation = `+${fluctuation}`;
 			}
 		}
 	});

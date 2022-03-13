@@ -1,8 +1,9 @@
 import {Download} from '@mui/icons-material';
-import {Fab, Box, List, Paper, Toolbar, Tooltip, Typography, ListItem, ListItemText, Stack, CircularProgress} from '@mui/material';
+import {Fab, Box, List, Paper, Toolbar, Tooltip, Typography, ListItem} from '@mui/material';
 import axios from 'axios';
 import React from 'react';
-import { useSelector } from '../store/store';
+
+import {useSelector} from '../store/store';
 
 export const DownloadList = () => {
 	const rows = useSelector((state) => state.rows.value);
@@ -22,7 +23,7 @@ export const DownloadList = () => {
 					height: 'calc(100% - 166px)',
 					backgroundColor: 'whitesmoke',
 					overflow: 'auto',
-					overflowX: 'auto'
+					overflowX: 'auto',
 				}}
 			>
 				{
@@ -30,10 +31,10 @@ export const DownloadList = () => {
 						return (
 							<ListItem key={index} sx={{userSelect: 'none'}}>
 								<Typography sx={{whiteSpace: 'nowrap'}}>
-									{rows.find(value => value.url === item)?.title}
+									{rows.find((value) => value.url === item)?.title}
 								</Typography>
 							</ListItem>
-						)
+						);
 					})
 				}
 			</List>
@@ -42,8 +43,8 @@ export const DownloadList = () => {
 					<Fab
 						size='large'
 						color="primary"
-						onClick={event => {
-							axios.get(`http://${location.host}/HoloRanking/api/download?videoid=${download}`)
+						onClick={(event) => {
+							axios.get(`http://${location.host}/HoloRanking/api/download?videoid=${download}`);
 						}}
 					>
 						<Download />

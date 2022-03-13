@@ -67,16 +67,19 @@
 		"@babel/runtime": "^7.17.2",
 		"@emotion/react": "^11.8.1",
 		"@emotion/styled": "^11.8.1",
+		"@ffmpeg-installer/ffmpeg": "^1.1.0",
 		"@mui/icons-material": "^5.4.2",
 		"@mui/material": "^5.4.2",
 		"@mui/x-data-grid": "^5.6.0",
 		"@reduxjs/toolkit": "^1.8.0",
+		"@types/fluent-ffmpeg": "^2.1.20",
 		"axios": "^0.26.0",
 		"csv-parse": "^5.0.4",
 		"dayjs": "^1.10.8",
 		"eslint-plugin-unused-imports": "^2.0.0",
 		"express": "^4.17.3",
 		"express-rate-limit": "^6.3.0",
+		"fluent-ffmpeg": "^2.1.2",
 		"googleapis": "^95.0.0",
 		"holodex.js": "^1.1.0",
 		"log4js": "^6.4.2",
@@ -84,6 +87,6 @@
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-redux": "^7.2.6",
-		"ytdl-core": "^4.10.1"
+		"ytdl-core": "^4.11.0"
 	}
 }

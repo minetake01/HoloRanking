@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import * as fs from 'fs';
 
 import {google} from 'googleapis';
@@ -45,7 +46,7 @@ export async function dataCollection() {
 	// データ読み込み
 	const previousDate = new Date();
 	previousDate.setDate(previousDate.getDate() - 1);
-	songsData = JSON.parse(await fs.promises.readFile(`./songsData/${previousDate.getFullYear()}${('0'+(previousDate.getMonth()+1)).slice(-2)}${('0'+previousDate.getDate()).slice(-2)}.json`, 'utf-8')
+	songsData = JSON.parse(await fs.promises.readFile(`./songsData/${dayjs(previousDate).format('YYYYMMDD')}.json`, 'utf-8')
 		.catch((e) => {
 			throw systemLogger.error(e);
 		}));
@@ -125,7 +126,7 @@ export async function dataCollection() {
 		});
 	}
 	const date = new Date();
-	fs.writeFileSync(`./songsData/${date.getFullYear()}${('0'+(date.getMonth()+1)).slice(-2)}${('0'+date.getDate()).slice(-2)}.json`, JSON.stringify(songsData), null);
+	fs.writeFileSync(`./songsData/${dayjs(date).format('YYYYMMDD')}.json`, JSON.stringify(songsData), null);
 	systemLogger.info('Data Collected.');
 }
 

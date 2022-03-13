@@ -1,4 +1,5 @@
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 export type rowsType = {
 	rank: number | string,
@@ -9,7 +10,7 @@ export type rowsType = {
 	en_author: string | undefined,
 	song: string,
 	artist: string,
-	date: Date | undefined,
+	date: string,
 	increment: number,
 	total: number,
 	url: string,
@@ -90,7 +91,7 @@ export async function dataProcess(videoType: 'Music_Cover' | 'Original', period:
 			en_author: item.en_author.join(),
 			song: item.song.join(),
 			artist: item.artist.join(),
-			date: item.date,
+			date: dayjs(item.date).format('YYYY/MM/DD'),
 			increment: prevItem ? item.total - prevItem!.total : item.total,
 			total: item.total,
 			url: `https://www.youtube.com/watch?v=${item.videoId}`,

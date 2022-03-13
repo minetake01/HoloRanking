@@ -1,11 +1,12 @@
 import {Launch} from '@mui/icons-material';
-import {FormControl, Grid, IconButton, Link, MenuItem, Select, Toolbar, Tooltip} from '@mui/material';
-import {DataGrid, GridToolbar, jaJP} from '@mui/x-data-grid';
+import {Alert, FormControl, Grid, IconButton, Link, MenuItem, Select, Toolbar, Tooltip} from '@mui/material';
+import {DataGrid, GridComparatorFn, GridToolbar, jaJP} from '@mui/x-data-grid';
 import React from 'react';
 import {useDispatch} from 'react-redux';
 
 import {dataProcess} from '../dataProcessing';
 import {setControlKey} from '../store/Slice/controlKey';
+import { setDownload } from '../store/Slice/download';
 import {setPeriod} from '../store/Slice/period';
 import {setPlayer} from '../store/Slice/player';
 import {setRows} from '../store/Slice/rows';
@@ -16,6 +17,7 @@ export const Main = () => {
 	const videoType = useSelector((state) => state.videoType.value);
 	const period = useSelector((state) => state.period.value);
 	const rows = useSelector((state) => state.rows.value);
+	const download = useSelector((state) => state.download.value);
 	const controlKey = useSelector((state) => state.controlKey.state);
 	const dispatch = useDispatch();
 
@@ -31,6 +33,16 @@ export const Main = () => {
 				dispatch(setRows(value));
 			});
 	}, [videoType, period]);
+
+	const rankSortComparator: GridComparatorFn = (a, b) => {
+		return (typeof b === 'string' ? 0 : (b as number)) - (typeof a === 'string' ? 0 : (a as number));
+	};
+	const fluctuationSortComparator: GridComparatorFn = (a, b) => {
+		return +((b as string).replace(/±|-+$/, ''))! - +((a as string).replace(/±|-+$/, ''))!;
+	};
+	const dateSortComparator: GridComparatorFn = (a, b) => {
+		return +(a as string).replace(/\//g, '') - +(b as string).replace(/\//g, '')
+	}
 
 	return (
 		<Grid item xs={9} sx={{height: '100vh', paddingTop: '64px'}}>
@@ -73,18 +85,21 @@ export const Main = () => {
 						headerName: '順位',
 						type: 'number',
 						width: 70,
+						sortComparator: rankSortComparator,
 					},
 					{
 						field: 'lastRank',
 						headerName: '前回',
 						type: 'number',
 						width: 70,
+						sortComparator: rankSortComparator,
 					},
 					{
 						field: 'fluctuation',
 						headerName: '変動',
 						type: 'number',
 						width: 70,
+						sortComparator: fluctuationSortComparator,
 					},
 					{
 						field: 'title',
@@ -159,8 +174,9 @@ export const Main = () => {
 					{
 						field: 'date',
 						headerName: '日付',
-						type: 'date',
-						width: 200,
+						type: 'number',
+						width: 100,
+						sortComparator: dateSortComparator,
 					},
 					{
 						field: 'increment',
@@ -184,12 +200,17 @@ export const Main = () => {
 					},
 				]}
 				rows={rows}
-				getRowId={(row) => row.rank}
+				getRowId={(row) => row.url}
 				density='compact'
 				disableColumnMenu
 				disableSelectionOnClick
 				disableVirtualization
 				checkboxSelection
+				onSelectionModelChange={((selectionModel) => {
+					if (selectionModel.length > 50) selectionModel.length = 50
+					dispatch(setDownload(selectionModel))
+				})}
+				selectionModel={download}
 				components={{
 					Toolbar: GridToolbar,
 				}}

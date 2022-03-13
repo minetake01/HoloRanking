@@ -1,4 +1,4 @@
-import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import {useSelector as rawUseSelector, TypedUseSelectorHook} from 'react-redux';
 
 import commentReducer from './Slice/comment';
@@ -7,6 +7,7 @@ import periodReducer from './Slice/period';
 import playerReducer from './Slice/player';
 import rowsReducer from './Slice/rows';
 import videoTypeReducer from './Slice/videoType';
+import downloadReducer from './Slice/download';
 
 export const store = configureStore({
 	reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
 		rows: rowsReducer,
 		player: playerReducer,
 		comment: commentReducer,
+		download: downloadReducer,
 	},
 });
 
